@@ -2,6 +2,7 @@
   "itemGroup.qualtech": "Example Mod Tab",
   "block.qualtech.example_block": "Example Block",
   "block.qualtech.qualtech_block": "QualTech Block",
+  "block.qualtech.energy_cell": "Energy Cell",
   "item.qualtech.example_item": "Example Item",
 
   "qualtech.configuration.title": "QualTech Configs",

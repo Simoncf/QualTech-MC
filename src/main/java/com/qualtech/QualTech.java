@@ -12,8 +12,11 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import java.util.function.Supplier;
+
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.api.distmarker.Dist;
@@ -23,6 +26,8 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
@@ -44,6 +49,8 @@ public class QualTech {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
     // Create a Deferred Register to hold CreativeModeTabs which will all be registered under the "qualtech" namespace
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+    // Create a Deferred Register to hold BlockEntityTypes which will all be registered under the "qualtech" namespace
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
 
     // Creates a new Block with the id "qualtech:example_block", combining the namespace and path
     public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock("example_block", BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
@@ -55,6 +62,15 @@ public class QualTech {
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_CYAN).strength(3.5f));
     // Creates a new BlockItem with the id "qualtech:qualtech_block", combining the namespace and path
     public static final DeferredItem<BlockItem> QUALTECH_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("qualtech_block", QUALTECH_BLOCK);
+
+    // Creates a new RF/FE-powered machine block with the id "qualtech:energy_cell"
+    public static final DeferredBlock<EnergyCellBlock> ENERGY_CELL = BLOCKS.register("energy_cell",
+            () -> new EnergyCellBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.5f).requiresCorrectToolForDrops()));
+    // Creates a new BlockItem with the id "qualtech:energy_cell", combining the namespace and path
+    public static final DeferredItem<BlockItem> ENERGY_CELL_ITEM = ITEMS.registerSimpleBlockItem("energy_cell", ENERGY_CELL);
+    // Creates the BlockEntityType backing the energy cell's block entity
+    public static final Supplier<BlockEntityType<EnergyCellBlockEntity>> ENERGY_CELL_BE = BLOCK_ENTITY_TYPES.register("energy_cell",
+            () -> BlockEntityType.Builder.of(EnergyCellBlockEntity::new, ENERGY_CELL.get()).build(null));
 
     // Creates a new food item with the id "qualtech:example_id", nutrition 1 and saturation 2
     public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item", new Item.Properties().food(new FoodProperties.Builder()
@@ -81,6 +97,12 @@ public class QualTech {
         ITEMS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
+        // Register the Deferred Register to the mod event bus so block entity types get registered
+        BLOCK_ENTITY_TYPES.register(modEventBus);
+
+        // Expose the energy cell's RF/FE storage as a capability, so cables from other mods (e.g.
+        // Mekanism, Immersive Engineering) can charge/discharge it when placed next to it
+        modEventBus.addListener(this::registerCapabilities);
 
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (QualTech) to respond directly to events.
@@ -112,7 +134,13 @@ public class QualTech {
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.accept(EXAMPLE_BLOCK_ITEM);
             event.accept(QUALTECH_BLOCK_ITEM);
+            event.accept(ENERGY_CELL_ITEM);
         }
+    }
+
+    private void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ENERGY_CELL_BE.get(),
+                (blockEntity, side) -> blockEntity.getEnergyStorage());
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
