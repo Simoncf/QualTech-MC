@@ -40,6 +40,14 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+    // Mekanism
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.dev/"
+        content {
+            includeGroup "mekanism"
+        }
+    }
 }
 
 base {
@@ -128,6 +136,9 @@ dependencies {
 
     // Alternating Flux - dev/testing environment only
     localRuntime "maven.modrinth:alternating-flux-neoforge:${alternatingflux_modrinth_version}"
+
+    // Mekanism - dev/testing environment only
+    localRuntime "mekanism:Mekanism:${mekanism_version}"
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
