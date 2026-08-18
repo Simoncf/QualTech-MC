@@ -46,11 +46,11 @@ public class EnergyCellBlock extends BaseEntityBlock {
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (level.getBlockEntity(pos) instanceof EnergyCellBlockEntity energyCell) {
             if (!level.isClientSide) {
-                if (player.isShiftKeyDown()) {
+              /*  if (player.isShiftKeyDown()) {
                     energyCell.debugDrain();
                 } else {
                     energyCell.debugCharge();
-                }
+                }*/
                 energyCell.reportEnergyTo(player);
             }
             return InteractionResult.SUCCESS;
