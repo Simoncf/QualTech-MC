@@ -46,18 +46,18 @@ public class QualTech {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
     // Creates a new Block with the id "qualtech:example_block", combining the namespace and path
-    public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock("example_block", p -> p.mapColor(MapColor.STONE));
+    public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock("example_block", BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
     // Creates a new BlockItem with the id "qualtech:example_block", combining the namespace and path
     public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("example_block", EXAMPLE_BLOCK);
 
     // Creates a new Block with the id "qualtech:qualtech_block", combining the namespace and path
     public static final DeferredBlock<Block> QUALTECH_BLOCK = BLOCKS.registerSimpleBlock("qualtech_block",
-            p -> p.mapColor(MapColor.COLOR_CYAN).strength(3.5f));
+            BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_CYAN).strength(3.5f));
     // Creates a new BlockItem with the id "qualtech:qualtech_block", combining the namespace and path
     public static final DeferredItem<BlockItem> QUALTECH_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("qualtech_block", QUALTECH_BLOCK);
 
     // Creates a new food item with the id "qualtech:example_id", nutrition 1 and saturation 2
-    public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item", p -> p.food(new FoodProperties.Builder()
+    public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item", new Item.Properties().food(new FoodProperties.Builder()
             .alwaysEdible().nutrition(1).saturationModifier(2f).build()));
 
     // Creates a creative tab with the id "qualtech:example_tab" for the example item, that is placed after the combat tab
