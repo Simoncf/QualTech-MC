@@ -3,6 +3,7 @@
   "block.qualtech.example_block": "Example Block",
   "block.qualtech.qualtech_block": "QualTech Block",
   "block.qualtech.energy_cell": "Energy Cell",
+  "block.qualtech.ore_grinder": "Ore Grinder",
   "item.qualtech.example_item": "Example Item",
 
   "qualtech.configuration.title": "QualTech Configs",

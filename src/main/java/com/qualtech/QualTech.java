@@ -14,6 +14,7 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import java.util.function.Supplier;
 
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -29,6 +30,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -51,6 +53,8 @@ public class QualTech {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     // Create a Deferred Register to hold BlockEntityTypes which will all be registered under the "qualtech" namespace
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
+    // Create a Deferred Register to hold MenuTypes which will all be registered under the "qualtech" namespace
+    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, MODID);
 
     // Creates a new Block with the id "qualtech:example_block", combining the namespace and path
     public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock("example_block", BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
@@ -71,6 +75,18 @@ public class QualTech {
     // Creates the BlockEntityType backing the energy cell's block entity
     public static final Supplier<BlockEntityType<EnergyCellBlockEntity>> ENERGY_CELL_BE = BLOCK_ENTITY_TYPES.register("energy_cell",
             () -> BlockEntityType.Builder.of(EnergyCellBlockEntity::new, ENERGY_CELL.get()).build(null));
+
+    // Creates a new ore-grinding RF/FE-powered machine block with the id "qualtech:ore_grinder"
+    public static final DeferredBlock<GrinderBlock> ORE_GRINDER = BLOCKS.register("ore_grinder",
+            () -> new GrinderBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(4.0f).requiresCorrectToolForDrops()));
+    // Creates a new BlockItem with the id "qualtech:ore_grinder", combining the namespace and path
+    public static final DeferredItem<BlockItem> ORE_GRINDER_ITEM = ITEMS.registerSimpleBlockItem("ore_grinder", ORE_GRINDER);
+    // Creates the BlockEntityType backing the ore grinder's block entity
+    public static final Supplier<BlockEntityType<GrinderBlockEntity>> ORE_GRINDER_BE = BLOCK_ENTITY_TYPES.register("ore_grinder",
+            () -> BlockEntityType.Builder.of(GrinderBlockEntity::new, ORE_GRINDER.get()).build(null));
+    // Creates the MenuType used to open the ore grinder's screen
+    public static final Supplier<MenuType<GrinderMenu>> ORE_GRINDER_MENU = MENUS.register("ore_grinder",
+            () -> IMenuTypeExtension.create(GrinderMenu::new));
 
     // Creates a new food item with the id "qualtech:example_id", nutrition 1 and saturation 2
     public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item", new Item.Properties().food(new FoodProperties.Builder()
@@ -99,6 +115,8 @@ public class QualTech {
         CREATIVE_MODE_TABS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so block entity types get registered
         BLOCK_ENTITY_TYPES.register(modEventBus);
+        // Register the Deferred Register to the mod event bus so menu types get registered
+        MENUS.register(modEventBus);
 
         // Expose the energy cell's RF/FE storage as a capability, so cables from other mods (e.g.
         // Mekanism, Immersive Engineering) can charge/discharge it when placed next to it
@@ -135,12 +153,17 @@ public class QualTech {
             event.accept(EXAMPLE_BLOCK_ITEM);
             event.accept(QUALTECH_BLOCK_ITEM);
             event.accept(ENERGY_CELL_ITEM);
+            event.accept(ORE_GRINDER_ITEM);
         }
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ENERGY_CELL_BE.get(),
                 (blockEntity, side) -> blockEntity.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ORE_GRINDER_BE.get(),
+                (blockEntity, side) -> blockEntity.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ORE_GRINDER_BE.get(),
+                (blockEntity, side) -> blockEntity.getItemHandler());
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call

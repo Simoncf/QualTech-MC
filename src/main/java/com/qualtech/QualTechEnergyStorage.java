@@ -29,4 +29,9 @@ public class QualTechEnergyStorage extends EnergyStorage {
         }
         return extracted;
     }
+
+    // Used only to mirror the server's value onto the client's copy of this storage via ContainerData syncing
+    public void setEnergyStored(int amount) {
+        this.energy = Math.max(0, Math.min(amount, capacity));
+    }
 }
