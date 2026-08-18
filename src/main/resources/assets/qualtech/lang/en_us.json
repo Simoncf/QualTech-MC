@@ -1,0 +1,14 @@
+{
+  "itemGroup.qualtech": "Example Mod Tab",
+  "block.qualtech.example_block": "Example Block",
+  "block.qualtech.qualtech_block": "QualTech Block",
+  "item.qualtech.example_item": "Example Item",
+
+  "qualtech.configuration.title": "QualTech Configs",
+  "qualtech.configuration.section.qualtech.common.toml": "QualTech Configs",
+  "qualtech.configuration.section.qualtech.common.toml.title": "QualTech Configs",
+  "qualtech.configuration.items": "Item List",
+  "qualtech.configuration.logDirtBlock": "Log Dirt Block",
+  "qualtech.configuration.magicNumberIntroduction": "Magic Number Text",
+  "qualtech.configuration.magicNumber": "Magic Number"
+}

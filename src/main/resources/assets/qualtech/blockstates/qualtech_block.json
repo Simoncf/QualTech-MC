@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "qualtech:block/qualtech_block" }
+  }
+}
