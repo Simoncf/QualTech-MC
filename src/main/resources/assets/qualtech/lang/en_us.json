@@ -5,6 +5,9 @@
   "block.qualtech.energy_cell": "Energy Cell",
   "block.qualtech.ore_grinder": "Ore Grinder",
   "item.qualtech.example_item": "Example Item",
+  "item.qualtech.iron_dust": "Iron Dust",
+  "item.qualtech.gold_dust": "Gold Dust",
+  "item.qualtech.copper_dust": "Copper Dust",
 
   "qualtech.configuration.title": "QualTech Configs",
   "qualtech.configuration.section.qualtech.common.toml": "QualTech Configs",

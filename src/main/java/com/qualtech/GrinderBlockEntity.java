@@ -28,14 +28,18 @@ public class GrinderBlockEntity extends BlockEntity implements MenuProvider {
     private static final int ENERGY_PER_TICK = 40;
     private static final int MAX_PROGRESS = 100;
 
-    // Ore -> doubled raw material, the classic "ore doubling grinder" recipe set
+    // Ore -> doubled raw material, and raw material -> doubled dust: a two-stage processing chain,
+    // with dust smelting back into ingots (see data/qualtech/recipe/*_dust_smelting.json)
     private static final Map<Item, ItemStack> RECIPES = Map.of(
             Items.IRON_ORE, new ItemStack(Items.RAW_IRON, 2),
             Items.DEEPSLATE_IRON_ORE, new ItemStack(Items.RAW_IRON, 2),
             Items.GOLD_ORE, new ItemStack(Items.RAW_GOLD, 2),
             Items.DEEPSLATE_GOLD_ORE, new ItemStack(Items.RAW_GOLD, 2),
             Items.COPPER_ORE, new ItemStack(Items.RAW_COPPER, 2),
-            Items.DEEPSLATE_COPPER_ORE, new ItemStack(Items.RAW_COPPER, 2));
+            Items.DEEPSLATE_COPPER_ORE, new ItemStack(Items.RAW_COPPER, 2),
+            Items.RAW_IRON, new ItemStack(QualTech.IRON_DUST.get(), 2),
+            Items.RAW_GOLD, new ItemStack(QualTech.GOLD_DUST.get(), 2),
+            Items.RAW_COPPER, new ItemStack(QualTech.COPPER_DUST.get(), 2));
 
     private final QualTechEnergyStorage energyStorage = new QualTechEnergyStorage(CAPACITY, MAX_RECEIVE, this::setChanged);
     private final ItemStackHandler itemHandler = new ItemStackHandler(2) {

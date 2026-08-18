@@ -88,6 +88,11 @@ public class QualTech {
     public static final Supplier<MenuType<GrinderMenu>> ORE_GRINDER_MENU = MENUS.register("ore_grinder",
             () -> IMenuTypeExtension.create(GrinderMenu::new));
 
+    // Dust items produced by grinding raw ore in the Ore Grinder, smeltable back into their ingot
+    public static final DeferredItem<Item> IRON_DUST = ITEMS.registerSimpleItem("iron_dust", new Item.Properties());
+    public static final DeferredItem<Item> GOLD_DUST = ITEMS.registerSimpleItem("gold_dust", new Item.Properties());
+    public static final DeferredItem<Item> COPPER_DUST = ITEMS.registerSimpleItem("copper_dust", new Item.Properties());
+
     // Creates a new food item with the id "qualtech:example_id", nutrition 1 and saturation 2
     public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item", new Item.Properties().food(new FoodProperties.Builder()
             .alwaysEdible().nutrition(1).saturationModifier(2f).build()));
@@ -154,6 +159,11 @@ public class QualTech {
             event.accept(QUALTECH_BLOCK_ITEM);
             event.accept(ENERGY_CELL_ITEM);
             event.accept(ORE_GRINDER_ITEM);
+        }
+        if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+            event.accept(IRON_DUST);
+            event.accept(GOLD_DUST);
+            event.accept(COPPER_DUST);
         }
     }
 
