@@ -204,3 +204,16 @@ idea {
         downloadJavadoc = true
     }
 }
+
+// NeoGradle's dependency configurations (e.g. localRuntime alongside the normal compile/runtime
+// classpaths) can cause the same jar to be added to the generated .classpath more than once,
+// which Eclipse rejects as a "duplicate entry" build path error. Deduplicate by path to fix it.
+eclipse {
+    classpath {
+        file {
+            whenMerged {
+                entries.unique { it.path }
+            }
+        }
+    }
+}
